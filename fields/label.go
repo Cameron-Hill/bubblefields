@@ -1,4 +1,4 @@
-package main
+package fields
 
 import tea "github.com/charmbracelet/bubbletea"
 

@@ -1,9 +1,11 @@
-package main
+package ansi
 
 import (
+	"errors"
 	"regexp"
 )
 
+// https://github.com/acarl005/stripansi - thanks
 const ansi = "[\u001B\u009B][[\\]()#;?]*(?:(?:(?:[a-zA-Z\\d]*(?:;[a-zA-Z\\d]*)*)?\u0007)|(?:(?:\\d{1,4}(?:;\\d{0,4})*)?[\\dA-PRZcf-ntqry=><~]))"
 
 var re = regexp.MustCompile(ansi)
@@ -14,10 +16,15 @@ func Strip(str string) string {
 
 // actualIndex returns the index in the original (ANSI included) string
 // that corresponds to the given display index (ANSI excluded).
-func ActualIndex(ansiStr string, displayIndex int) int {
+// Returns an error if the display index is out of range or if the ansiStr argument is an empty string.
+func ActualIndex(ansiStr string, displayIndex int) (int, error) {
 	actual := 0
 	display := 0
 	runes := []rune(ansiStr)
+
+	if displayIndex < 0 {
+		displayIndex = len(ansiStr) + displayIndex
+	}
 
 	for i := 0; i < len(runes); {
 		remaining := string(runes[i:])
@@ -29,7 +36,7 @@ func ActualIndex(ansiStr string, displayIndex int) int {
 			actual += loc[1]
 		} else {
 			if display == displayIndex {
-				return actual
+				return actual, nil
 			}
 			i++
 			actual++
@@ -37,8 +44,7 @@ func ActualIndex(ansiStr string, displayIndex int) int {
 		}
 	}
 
-	// If displayIndex is out of range, return -1
-	return -1
+	return 0, errors.New("index out of range")
 }
 
 // ActiveANSICodes returns a slice of active ANSI codes at the given display index.
@@ -71,5 +77,3 @@ func ActiveANSICodes(s string, displayIndex int) []string {
 
 	return activeCodes
 }
-
-

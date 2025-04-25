@@ -1,9 +1,10 @@
-package main
+package overlay
 
 import (
 	"fmt"
 	"strings"
 
+	"github.com/Cameron-Hill/bubbleform/ansi"
 	"github.com/charmbracelet/lipgloss"
 )
 
@@ -48,11 +49,11 @@ func Overlay(base, overlay string) string {
 
 		// Handle styles
 		// 1. Get actual index at left and right
-		actualLeft := ActualIndex(content[i], left)
-		actualRight := ActualIndex(content[i], right)
+		actualLeft := ansi.ActualIndex(content[i], left)
+		actualRight := ansi.ActualIndex(content[i], right)
 
 		// 2. Determine what the style should be at overlay termination
-		terminationStyles := strings.Join(ActiveANSICodes(content[i], right), "")
+		terminationStyles := strings.Join(ansi.ActiveANSICodes(content[i], right), "")
 
 		// 3. Cancel any existing styles where the overlay starts
 		with = "\x1b[0m" + with
