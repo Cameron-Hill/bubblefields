@@ -1,4 +1,4 @@
-package main
+package bubbleform
 
 import (
 	tea "github.com/charmbracelet/bubbletea"
