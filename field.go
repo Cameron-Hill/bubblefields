@@ -1,6 +1,15 @@
 package bubbleform
 
 type Field interface {
+	// Get the current value of the field
 	Value() string
-	SetError(err error) Form
+
+	// Set validation error on the field
+	SetError(err error)
+
+	// Optional method to reset field errors
+	ClearError()
+
+	// Optional method for field-level validation
+	// Validate() error
 }
