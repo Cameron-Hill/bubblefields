@@ -49,8 +49,12 @@ func Overlay(base, overlay string) string {
 
 		// Handle styles
 		// 1. Get actual index at left and right
-		actualLeft := ansi.ActualIndex(content[i], left)
-		actualRight := ansi.ActualIndex(content[i], right)
+		actualLeft, lerr := ansi.ActualIndex(content[i], left)
+		actualRight, rerr := ansi.ActualIndex(content[i], right)
+
+		if lerr != nil || rerr != nil {
+			continue
+		}
 
 		// 2. Determine what the style should be at overlay termination
 		terminationStyles := strings.Join(ansi.ActiveANSICodes(content[i], right), "")

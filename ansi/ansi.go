@@ -18,12 +18,13 @@ func Strip(str string) string {
 // that corresponds to the given display index (ANSI excluded).
 // Returns an error if the display index is out of range or if the ansiStr argument is an empty string.
 func ActualIndex(ansiStr string, displayIndex int) (int, error) {
+
 	actual := 0
 	display := 0
 	runes := []rune(ansiStr)
 
-	if displayIndex < 0 {
-		displayIndex = len(ansiStr) + displayIndex
+	if displayIndex < 0 || displayIndex >= len(runes) {
+		return 0, errors.New("index out of range")
 	}
 
 	for i := 0; i < len(runes); {
